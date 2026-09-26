@@ -1,0 +1,16 @@
+name: Mineframe
+version: '${version}'
+main: me.abdullahrasheed.mineframe.MineframePlugin
+description: A PaperMC plugin.
+author: Abdullah Rasheed
+api-version: '26.2'
+commands:
+  mineframe:
+    description: Checks whether Mineframe is running.
+    usage: /mineframe
+    permission: mineframe.command
+permissions:
+  mineframe.command:
+    description: Allows use of /mineframe.
+    default: true
+
