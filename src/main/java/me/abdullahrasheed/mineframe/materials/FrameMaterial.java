@@ -24,10 +24,14 @@ import org.joml.Vector3f;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.DyedItemColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
 public enum FrameMaterial {
 
-    SELITE("Selite", Color.AQUA);
+    SELITE("Selite", Color.AQUA),
+    THORIN("Thorin", Color.ORANGE);
 
     private static final Map<Block, LightSource> ACTIVE_LIGHTS = new HashMap<>();
     private static final Set<BeamEffect> ACTIVE_BEAMS = new HashSet<>();
@@ -55,7 +59,12 @@ public enum FrameMaterial {
 
     public ItemStack createItemStack(){
         ItemStack item = new ItemStack(Material.PAPER);
-        item.editMeta(meta -> meta.setDisplayName(getName()));
+        item.editMeta(meta -> {
+            Component displayName = Component.text(getName())
+                .decoration(TextDecoration.ITALIC, false)
+                .color(TextColor.color(getBeamColor().asRGB()));
+            meta.displayName(displayName);
+        });
         item.setData(DataComponentTypes.ITEM_MODEL, NamespacedKey.fromString("mineframe:" + modelName));
         item.editPersistentDataContainer(pdc -> {
             pdc.set(NamespacedKey.fromString("mineframe:material_type"), PersistentDataType.STRING, modelName);
