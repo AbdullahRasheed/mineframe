@@ -1,0 +1,21 @@
+{
+  "textures": {
+    "0": "mineframe:item/loot_beam",
+    "particle": "mineframe:item/loot_beam"
+  },
+  "elements": [
+    {
+      "from": [7.25, 0, 7.25],
+      "to": [8.75, 15, 8.75],
+      "rotation": {"angle": 0, "axis": "y", "origin": [7, 0, 7]},
+      "faces": {
+        "north": {"uv": [8.25, 1, 9.75, 16], "texture": "#0", "tintindex": 0},
+        "east": {"uv": [14.25, 1, 15.75, 16], "texture": "#0", "tintindex": 0},
+        "south": {"uv": [10, 1, 11.5, 16], "texture": "#0", "tintindex": 0},
+        "west": {"uv": [12, 1, 13.5, 16], "texture": "#0", "tintindex": 0},
+        "up": {"uv": [7.25, 0.25, 7.75, 0.75], "texture": "#0", "tintindex": 0},
+        "down": {"uv": [5.25, 0.25, 5.75, 0.75], "texture": "#0", "tintindex": 0}
+      }
+    }
+  ]
+}

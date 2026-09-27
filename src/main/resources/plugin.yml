@@ -5,12 +5,14 @@ description: A PaperMC plugin.
 author: Abdullah Rasheed
 api-version: '26.2'
 commands:
-  mineframe:
-    description: Checks whether Mineframe is running.
-    usage: /mineframe
-    permission: mineframe.command
+  materials:
+    description: Opens your FrameMaterial collection.
+    usage: /materials [reload]
+    permission: mineframe.command.materials
 permissions:
-  mineframe.command:
-    description: Allows use of /mineframe.
+  mineframe.command.materials:
+    description: Allows a player to open the materials menu.
     default: true
-
+  mineframe.command.materials.reload:
+    description: Allows reloading material-drops.yml.
+    default: op

@@ -19,6 +19,32 @@ java {
     toolchain.languageVersion = JavaLanguageVersion.of(25)
 }
 
+val generateTexturePackAssets = tasks.register<Exec>("generateTexturePackAssets") {
+    val javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+
+    inputs.file("texturepack-assets/GenerateTexturePackAssets.java")
+    outputs.files(
+        "mineframe-texturepack/assets/minecraft/textures/gui/sprites/boss_bar/notched_20_background.png",
+        "mineframe-texturepack/assets/minecraft/textures/gui/sprites/boss_bar/white_background.png"
+    )
+    commandLine(
+        javaLauncher.get().executablePath.asFile.absolutePath,
+        "-Djava.awt.headless=true",
+        "texturepack-assets/GenerateTexturePackAssets.java"
+    )
+}
+
+val texturePackZip = tasks.register<Zip>("texturePackZip") {
+    dependsOn(generateTexturePackAssets)
+    from("mineframe-texturepack") {
+        exclude(".DS_Store")
+    }
+    archiveFileName = "mineframe-texturepack.zip"
+    destinationDirectory = layout.buildDirectory.dir("distributions")
+}
+
 tasks {
     compileJava {
         options.encoding = "UTF-8"
@@ -37,5 +63,8 @@ tasks {
     jar {
         archiveBaseName = "Mineframe"
     }
-}
 
+    build {
+        dependsOn(texturePackZip)
+    }
+}
