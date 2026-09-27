@@ -1,22 +1,21 @@
-package me.abdullahrasheed.mineframe.materials.drops;
+package me.abdullahrasheed.mineframe.blueprints.drops;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
+import me.abdullahrasheed.mineframe.blueprints.Blueprint;
 import me.abdullahrasheed.mineframe.collectibles.drops.BlockConditions;
-import me.abdullahrasheed.mineframe.materials.FrameMaterial;
 
-public record MaterialDropRule(
-        FrameMaterial frameMaterial,
+public record BlueprintDropRule(
+        Blueprint blueprint,
         Material sourceBlock,
         double chance,
-        DropRange range,
         BlockConditions conditions
 ) {
 
-    public MaterialDropRule {
+    public BlueprintDropRule {
         if (chance < 0.0 || chance > 1.0) {
             throw new IllegalArgumentException("chance must be between 0 and 1");
         }

@@ -1,0 +1,10 @@
+{
+  "world.pickup": {
+    "sounds": [
+      {
+        "name": "mineframe:world/pickup",
+        "stream": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+# FrameItem definitions. Every FrameItem automatically has exactly one blueprint.
+# Missing bundled definitions/settings are merged into the server copy on startup
+# and when /blueprints reload is run. Existing server values are never replaced.
+#
+# Both the finished item and its blueprint use the item model mineframe:<item-id>.
+# The blueprint also supplies the custom-model-data string "greyscale".
+#
+# Example definition (remove the leading # characters to enable it):
+#
+# starter_sword:
+#   display-name: "Starter Sword"
+#   ingredients:
+#     frame-materials:
+#       selite: 200
+#     minecraft-items:
+#       rotten_flesh: 20

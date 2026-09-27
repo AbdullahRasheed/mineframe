@@ -1,4 +1,4 @@
-package me.abdullahrasheed.mineframe.materials.drops;
+package me.abdullahrasheed.mineframe.collectibles.drops;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -6,8 +6,9 @@ import java.util.Map;
 
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.configuration.ConfigurationSection;
 
-/** Cached block-state requirements such as {@code age: max}. */
+/** Cached block-state requirements shared by all block-based collectible drops. */
 public final class BlockConditions {
 
     private static final BlockConditions NONE = new BlockConditions(Map.of());
@@ -24,6 +25,22 @@ public final class BlockConditions {
 
     public static BlockConditions none() {
         return NONE;
+    }
+
+    public static BlockConditions fromRule(ConfigurationSection ruleSection) {
+        ConfigurationSection conditionsSection = ruleSection.getConfigurationSection("conditions");
+        if (conditionsSection == null) {
+            return none();
+        }
+
+        Map<String, String> conditions = new LinkedHashMap<>();
+        for (String key : conditionsSection.getKeys(false)) {
+            Object value = conditionsSection.get(key);
+            if (value != null) {
+                conditions.put(key, value.toString());
+            }
+        }
+        return new BlockConditions(conditions);
     }
 
     public boolean matches(BlockData blockData) {
@@ -73,4 +90,3 @@ public final class BlockConditions {
         return properties;
     }
 }
-

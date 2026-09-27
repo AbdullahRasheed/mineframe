@@ -1,9 +1,7 @@
 package me.abdullahrasheed.mineframe.materials.drops;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -14,6 +12,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.abdullahrasheed.mineframe.config.MergedYamlConfig;
+import me.abdullahrasheed.mineframe.collectibles.drops.BlockConditions;
 import me.abdullahrasheed.mineframe.materials.FrameMaterial;
 
 /** Loads, validates, and caches material drop rules from material-drops.yml. */
@@ -29,12 +29,8 @@ public final class MaterialDropRegistry {
     }
 
     public int reload() {
-        File file = new File(plugin.getDataFolder(), FILE_NAME);
-        if (!file.exists()) {
-            plugin.saveResource(FILE_NAME, false);
-        }
+        YamlConfiguration configuration = MergedYamlConfig.load(plugin, FILE_NAME);
 
-        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
         Map<Material, List<MaterialDropRule>> loadedRules = new EnumMap<>(Material.class);
         int ruleCount = 0;
 
@@ -68,7 +64,7 @@ public final class MaterialDropRegistry {
                 try {
                     double chance = readChance(ruleSection, rulePath);
                     DropRange range = readRange(ruleSection.get("range"), rulePath);
-                    BlockConditions conditions = readConditions(ruleSection);
+                    BlockConditions conditions = BlockConditions.fromRule(ruleSection);
                     MaterialDropRule rule = new MaterialDropRule(
                         frameMaterial,
                         sourceBlock,
@@ -141,22 +137,6 @@ public final class MaterialDropRegistry {
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException("range contains a non-integer value at " + path);
         }
-    }
-
-    private static BlockConditions readConditions(ConfigurationSection ruleSection) {
-        ConfigurationSection conditionsSection = ruleSection.getConfigurationSection("conditions");
-        if (conditionsSection == null) {
-            return BlockConditions.none();
-        }
-
-        Map<String, String> conditions = new LinkedHashMap<>();
-        for (String key : conditionsSection.getKeys(false)) {
-            Object value = conditionsSection.get(key);
-            if (value != null) {
-                conditions.put(key, value.toString());
-            }
-        }
-        return new BlockConditions(conditions);
     }
 
     private static FrameMaterial findFrameMaterial(String id) {

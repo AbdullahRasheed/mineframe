@@ -9,10 +9,20 @@ commands:
     description: Opens your FrameMaterial collection.
     usage: /materials [reload]
     permission: mineframe.command.materials
+  blueprints:
+    description: Opens your blueprint collection.
+    usage: /blueprints [reload]
+    permission: mineframe.command.blueprints
 permissions:
   mineframe.command.materials:
     description: Allows a player to open the materials menu.
     default: true
   mineframe.command.materials.reload:
     description: Allows reloading material-drops.yml.
+    default: op
+  mineframe.command.blueprints:
+    description: Allows a player to open the blueprints menu.
+    default: true
+  mineframe.command.blueprints.reload:
+    description: Allows reloading FrameItem definitions and blueprint drop rules.
     default: op

@@ -6,17 +6,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.abdullahrasheed.mineframe.blueprints.BlueprintsCommand;
+import me.abdullahrasheed.mineframe.blueprints.drops.BlueprintDropRegistry;
+import me.abdullahrasheed.mineframe.collectibles.LootBeamEffects;
+import me.abdullahrasheed.mineframe.collectibles.PickupBars;
+import me.abdullahrasheed.mineframe.collectibles.events.BlockBreakCollectibleDrops;
+import me.abdullahrasheed.mineframe.collectibles.events.CollectiblePickUp;
 import me.abdullahrasheed.mineframe.gui.MenuListener;
-import me.abdullahrasheed.mineframe.materials.FrameMaterial;
-import me.abdullahrasheed.mineframe.materials.FrameMaterialPickupBars;
+import me.abdullahrasheed.mineframe.items.FrameItemRegistry;
 import me.abdullahrasheed.mineframe.materials.MaterialsCommand;
 import me.abdullahrasheed.mineframe.materials.drops.MaterialDropRegistry;
-import me.abdullahrasheed.mineframe.materials.events.BlockBreakMaterialEvents;
-import me.abdullahrasheed.mineframe.materials.events.FrameMaterialPickUp;
 
 public final class MineframePlugin extends JavaPlugin {
 
     private MaterialDropRegistry materialDropRegistry;
+    private FrameItemRegistry frameItemRegistry;
+    private BlueprintDropRegistry blueprintDropRegistry;
 
     @Override
     public void onEnable() {
@@ -24,9 +29,13 @@ public final class MineframePlugin extends JavaPlugin {
 
         materialDropRegistry = new MaterialDropRegistry(this);
         materialDropRegistry.reload();
+        frameItemRegistry = new FrameItemRegistry(this);
+        frameItemRegistry.reload();
+        blueprintDropRegistry = new BlueprintDropRegistry(this, frameItemRegistry);
+        blueprintDropRegistry.reload();
 
-        registerEvent(new BlockBreakMaterialEvents(materialDropRegistry));
-        registerEvent(new FrameMaterialPickUp());
+        registerEvent(new BlockBreakCollectibleDrops(materialDropRegistry, blueprintDropRegistry));
+        registerEvent(new CollectiblePickUp(frameItemRegistry));
         registerEvent(new MenuListener());
 
         PluginCommand materialsCommand = Objects.requireNonNull(
@@ -36,12 +45,23 @@ public final class MineframePlugin extends JavaPlugin {
         MaterialsCommand materialsExecutor = new MaterialsCommand(materialDropRegistry);
         materialsCommand.setExecutor(materialsExecutor);
         materialsCommand.setTabCompleter(materialsExecutor);
+
+        PluginCommand blueprintsCommand = Objects.requireNonNull(
+            getCommand("blueprints"),
+            "blueprints command is missing from plugin.yml"
+        );
+        BlueprintsCommand blueprintsExecutor = new BlueprintsCommand(
+            frameItemRegistry,
+            blueprintDropRegistry
+        );
+        blueprintsCommand.setExecutor(blueprintsExecutor);
+        blueprintsCommand.setTabCompleter(blueprintsExecutor);
     }
 
     @Override
     public void onDisable() {
-        FrameMaterialPickupBars.clearAll();
-        FrameMaterial.cleanupEffects();
+        PickupBars.clearAll();
+        LootBeamEffects.cleanup();
         getLogger().info("Mineframe has been disabled.");
     }
 
@@ -51,5 +71,13 @@ public final class MineframePlugin extends JavaPlugin {
 
     public MaterialDropRegistry getMaterialDropRegistry() {
         return materialDropRegistry;
+    }
+
+    public FrameItemRegistry getFrameItemRegistry() {
+        return frameItemRegistry;
+    }
+
+    public BlueprintDropRegistry getBlueprintDropRegistry() {
+        return blueprintDropRegistry;
     }
 }

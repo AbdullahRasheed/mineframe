@@ -1,0 +1,13 @@
+# Block drop rules for the one-to-one blueprints generated from items.yml.
+# A successful roll always drops exactly one blueprint item entity.
+# Mob drop sources will be handled separately in a future system.
+#
+# Example rule (remove the leading # characters after defining starter_sword):
+#
+# starter_sword:
+#   diamond_ore:
+#     chance: 0.05
+#   potatoes:
+#     chance: 0.01
+#     conditions:
+#       age: max
